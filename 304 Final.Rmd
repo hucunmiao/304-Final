@@ -1,0 +1,110 @@
+---
+title: "Explore the relationship between work experience and annual salary"
+author: "Cunmiao Hu(1004739688)"
+date: "Decemeber 21, 2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Abstract:
+
+ In this report, the content of the data set is about the salary of different employees in different industries and locations. The model used to investigate the relationship between working experience and salary is linear regression model. The result shows that annual salary will not highly depend on working experience. 
+
+Key words: 
+
+working experience, salary, linear regression, employment,
+observational study 
+
+Introduction: 
+
+Salary of a employer will be affected by many factors, like industry, age, gender, position, working experiences. When employers hiring workers, working experience will be regarded as an important indicator of a employee’s ability. They tend to hire an individual with more working experience and give him/her a higher salary. For employees, they expect to get a higher salary after a several years of working. They believe that more working experience can help them dealing with issues proficiently and quickly. Thus, they deserve a higher payment than those who do not have any experience. For employers, they would like to provide a position for those candidates who are familiar with their job. They don’t need to pay extra money and time to treat the new workers. Ng et al. (2005) stated that there is a strong positive relationship between working experience and salary. However, other people convince that working experience is not a significant factor that affect salary(e.g. Yeh et al., 1998). Thus, this report will confirm the relationship between working experience and salary by fitting a linear regression model.
+
+The next section is methodology section. In this part, more detail information about the data set will be addressed. Then, the model used to fit the data will be explained. After fitting the linear regression model, the results will be interpreted in the result section. The conclusion part will summaries the content of the report and the previous results. It will also include the weaknesses of the model and any improvement that can be done to make the analysis better. The last part will list all references used in this report. 
+
+
+Methodology: 
+
+The name of data set is “Salary Clean “. It collected the information about different employees in many industries. The information include the location of the company, job titles of workers, total experience year, employer experience year, annual base payment and bonus of employees. In order to explore the relationship between working experience and salary, the variable total experience year, employer experience year will be selected as predictor variable. Salary and bonus will be considered as response variable.
+
+There are many missing values in the original data set. So the first step is to clean the data by removing all missing values. The number of annual payment is relatively large, so converting the unit from /dollar to /thousand dollar can help with interpreting the plot. I also delete the maximum value in response and predictor variable because it will affect the model.  
+
+The chosen model is linear regression model since both response and predictor variables are numerical variable. The assumption is there is a positive linear relationship between salary and working experience. So to confirm the assumption, fitting predictor variables and response variables into a linear regression model. The significance of predictor variables for the response variable can be interpreted by p-value. 
+```{r,include=FALSE,include=FALSE}
+data = read.csv('salaries_clean.csv')
+hu_data = na.omit(data)
+attach(hu_data)
+annual_salary_in_k = annual_base_pay / 1000
+hu_data = cbind(hu_data,annual_salary_in_k)
+working_experience <- hu_data$total_experience_years
+which.max(working_experience)
+working1 <- working_experience[-15]
+salary <- hu_data$annual_salary_in_k
+which.max(salary)
+salary1 <-salary[-283]
+```
+
+Results : 
+
+From the scatter plot of annual payment and working experience, the linear relationship is not obvious. There is no distinguishing trend that salary is increasing with the working experience. The reason is that the predictor variable is a discrete variable. It’s not continuous so the trending can not be observed by the scatterplot. 
+
+Annual payment(in thousand dollar) = 94.0142 + 0.6875 working experience(in year)
+In this estimated equation, $beta_0$ is 94.0142. It means when the working experience of a employee is 0, his/her average salary will be 94.0142 thousand dollars per year. The coefficient of working experience, $beta_1$ is 0.6875. It means when the working experience of employees increases 1 year, the annula salary will increase 0.6875 thoudsands dollars on average.  
+
+The p-value of the estimated intercept is less than $2e^-16$, which is less than 0.05. So there is an evidence to reject the null hypothesis that $beta_0$ = 0. The intercept term is significant to the response variable. The p-value of the $beta_1$ is 0.405, which is larger than 0.05. Therefore, there is an evidence to support null hypothesis that $beta_1$ = 0. Another words, this predictor variable is not significant to the response variable. There is no relationship between working experience and salary. 
+
+```{r,echo=FALSE}
+
+plot(working1,salary1, main = "Scatterplot of annula payment and working experience ", xlab = "Total Experience Year" ,ylab = "Annual Payment (in thousands)")
+```
+```{r,include=FALSE, echo=FALSE}
+hu_model = lm(salary1 ~ working1, data = hu_data)
+summary(hu_model)
+```
+
+
+
+
+Discussion: 
+
+In the previous part, I used cleaned data to fit a linear regression model. By analyzing the p-values of $beta_0$ and $beta_1$, I found that the intercept is significant but the predictor variable is not significant to the response variable. The conclusion is the annual salary is not highly depend on the working experience. 
+
+In conclusion, the annual salary of a employee is not depend on his/her working experience(p-value 0.405). It seems that other factors, like job positions, location or industry of the company will also affect payment. It's true that some companies will regard working experience as a indicator when they hiring workers. However, it doesn't mean that older staff will definitely gain higher salary.
+
+The weakness of this model is that the data set doesn't provide enough observations. After remove the missing values and outliers, there is only 561 observations, so it's not general to make the prediction. If more data can be collected, the result will be more accurate. 
+
+In the next step, I will find a sufficient data set to investigate the factors that can affect salary. The data set should include more detailed information like gender, education level, age.
+
+
+
+Reference: 
+
+
+Sarfraz, M. & Qun, W. & Abdullah, M.I. & Tahir, S., 2019. "Authentic Leadership, Hope, Work Engagement and Creativity," Journal of Applied Management and Investments, Department of Business Administration and Corporate Security, International Humanitarian University, vol. 8(1), pages 19-31, February.
+
+Jana Coculova, 2018. "Analytical View of Outsourcing Education of Sales Managers," Journal of Applied Management and Investments, Department of Business Administration and Corporate Security, International Humanitarian University, vol. 7(3), pages 132-140, September. 
+
+Michaela Sirková & Viktória Ali Taha & Martina Ferencová, 2014. "An Impact of Continuing Education on Employees in Slovak Companies," Journal of Applied Management and Investments, Department of Business Administration and Corporate Security, International Humanitarian University, vol. 3(3), pages 170-178
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
